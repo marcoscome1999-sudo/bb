@@ -393,7 +393,9 @@ route('GET', '/api/export/:type', {}, ({ user, params }) => {
     for (const l of db.prepare('SELECT l.*, b.title, m.name FROM loans l LEFT JOIN books b ON b.id=l.book_id LEFT JOIN members m ON m.id=l.member_id ORDER BY l.id').all())
       rows.push([l.title || '', l.name || '', l.out, l.due, l.returned || '', l.returned ? 'Devolvido' : l.due < today ? 'Atrasado' : 'Ativo']);
   } else throw notFound('Relatório desconhecido.');
-  return { raw: '﻿' + rows.map((r) => r.map(csvCell).join(';')).join('\n'), type: 'text/csv; charset=utf-8', filename: params.type === 'books' ? 'inventario-biblioteca.csv' : 'emprestimos-biblioteca.csv' };
+  // The sep marker makes Portuguese Excel split semicolon-delimited exports into columns on open.
+  const csv = ['sep=;', ...rows.map((r) => r.map(csvCell).join(';'))].join('\r\n');
+  return { raw: '﻿' + csv + '\r\n', type: 'text/csv; charset=utf-8', filename: params.type === 'books' ? 'inventario-biblioteca.csv' : 'emprestimos-biblioteca.csv' };
 });
 
 /* ---------- servidor ---------- */
