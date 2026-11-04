@@ -1,0 +1,12 @@
+{
+  "name": "biblioteca-viva",
+  "version": "1.0.0",
+  "description": "Biblioteca Viva — sistema de gestão de biblioteca (API + SQLite, sem dependências)",
+  "main": "server.js",
+  "private": true,
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/smoke.test.js"
+  }
+}
